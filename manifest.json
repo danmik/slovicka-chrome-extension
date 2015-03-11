@@ -1,21 +1,20 @@
 {
   "manifest_version": 2,
 
-  "name": "Slovíčka",
+  "name": "Slovíčka Checker",
   "description": "Zobrazuje počet slovíček na opakování.",
   "version": "1.0",
 
   "permissions": [
-	"http://www.engslovicka.eu/",
-	"http://127.0.0.1:8000/",
-	"tabs"
+    "http://www.engslovicka.eu/",
+    "alarms"
   ],
-  "content_security_policy": "script-src 'self' https://code.jquery.com/jquery-1.10.1.min.js; object-src 'self'",
+  "content_security_policy": "script-src 'self'; object-src 'self'",
   "browser_action": {
     "default_icon": "icon.png"
   },
   "background": {
-    "page": "background.html",
-	"persistent": true
+    "scripts": ["background.js"],
+    "persistent": false
   }
 }

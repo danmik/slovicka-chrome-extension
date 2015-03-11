@@ -1,26 +1,26 @@
 function query_slovicka() {
-	//$.get("http://www.engslovicka.com/r/Bitcoin/", function(data) {
-	$.get("http://www.engslovicka.eu/get_practice_count", function(data) {
-		practice_count = parseInt(data);
-		updateBadge();
-	});
+	var xmlhttp = new XMLHttpRequest();
+
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4) {
+			if (xmlhttp.status == 200) {
+				var practice_count = parseInt(xmlhttp.responseText);
+				updateBadge(practice_count);
+			} else {
+				chrome.browserAction.setBadgeBackgroundColor({color:'#BC1616'});
+				updateBadge("?");
+			}
+		}
+	}
+
+	//xmlhttp.open("GET", "http://127.0.0.1:8000/get_practice_count", true);
+	xmlhttp.open("GET", "http://www.engslovicka.eu/get_practice_count", true);
+	xmlhttp.send();
 }
 
 
-function main() {
-	query_slovicka();
-	timerHandle = window.setTimeout(main, 1800000);
-}
-
-
-function resetTimer() {
-	window.clearTimeout(timerHandle);
-	timerHandle = window.setTimeout(main, 1800000);
-}
-
-
-function updateBadge() {
-	if (practice_count == '0') {
+function updateBadge(practice_count) {
+	if (practice_count == 0) {
 		chrome.browserAction.setBadgeText({text: ''});
 	} else {
 		chrome.browserAction.setBadgeText({text: practice_count.toString()});
@@ -28,17 +28,19 @@ function updateBadge() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-	practice_count = '0';
+chrome.runtime.onInstalled.addListener(function() {
 	chrome.browserAction.setBadgeBackgroundColor({color:'#4FACCD'});
-	main();
+	chrome.alarms.create({delayInMinutes: 30, periodInMinutes: 30});
+	query_slovicka();
+});
+
+chrome.alarms.onAlarm.addListener(function() {
+	query_slovicka();
 });
 
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-	resetTimer();
-	practice_count = '0';
-	updateBadge();
+	updateBadge('0');
 	chrome.tabs.create({'url': "http://www.engslovicka.eu"}, function(tab) {
 	});
 });
