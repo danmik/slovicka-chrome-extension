@@ -5,6 +5,7 @@ function query_slovicka() {
 		if (xmlhttp.readyState == 4) {
 			if (xmlhttp.status == 200) {
 				var practice_count = parseInt(xmlhttp.responseText);
+				chrome.browserAction.setBadgeBackgroundColor({color:'#4FACCD'});
 				updateBadge(practice_count);
 			} else {
 				chrome.browserAction.setBadgeBackgroundColor({color:'#BC1616'});
