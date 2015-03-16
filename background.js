@@ -4,9 +4,14 @@ function query_slovicka() {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
 			if (xmlhttp.status == 200) {
-				var practice_count = parseInt(xmlhttp.responseText);
-				chrome.browserAction.setBadgeBackgroundColor({color:'#4FACCD'});
-				updateBadge(practice_count);
+				if (xmlhttp.responseText == "?") {
+					chrome.browserAction.setBadgeBackgroundColor({color:'#BC1616'});
+					updateBadge("?");
+				} else {
+					var practice_count = parseInt(xmlhttp.responseText);
+					chrome.browserAction.setBadgeBackgroundColor({color:'#4FACCD'});
+					updateBadge(practice_count);
+				}
 			} else {
 				chrome.browserAction.setBadgeBackgroundColor({color:'#BC1616'});
 				updateBadge("?");
